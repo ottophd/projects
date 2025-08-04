@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Otto Lilja-Lund">
+
+<title>Your local chatbot - an amateurs introduction to Open-WebUI with Ollama</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Open-Webui_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Open-Webui_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Open-Webui_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Open-Webui_files/libs/quarto-html/popper.min.js"></script>
+<script src="Open-Webui_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Open-Webui_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Open-Webui_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Open-Webui_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Open-Webui_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Open-Webui_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Open-Webui_files/libs/bootstrap/bootstrap-57dd8020602f54a2f97656a08429a1b9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Your local chatbot - an amateurs introduction to Open-WebUI with Ollama</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Otto Lilja-Lund </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>I’ve been eyeing to run local llms and finally jumped the gun. But how do you actually do it? I share with you my fumbling steps towards local AI. As someone starting without any advanced knowledge I hope that anyone out there, inexperienced as me, but curious how to start, joins me on my journey towards local AI.</p>
+<p>Oh, and I am also learning Linux - with Ubuntu to be more specific. Me learning Linux and local AI are personal steps to break free from big tech, and to understand more of what is going on under the hood of the technology we use everyday.</p>
+<section id="where-to-start" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-start">Where to start?</h2>
+<p>Hardware is separate topic so I won’t go into that here. I have an NVIDIA GPU with 24 GB of VRAM, which means that I have a dedicated graphic card that will do most, if not all, of the computations needed for local AI.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>{bash} is commands you run in a terminal, powershell or command lines. Copy - paste - enter from the code-blocks in the article and you are good to go! You’ll basically do everything in a terminal with {bash} from here on. Oh, and you’ll use <code>sudo</code> a lot. Using <code>sudo</code> prompts you to enter your password, <code>sudo</code> temporarily elevates the users’s privileges. The <code>sudo</code>is active for a short period of time, hence you migth want to add <code>sudo</code> to our commands if the don’t run.</p>
+</div>
+</div>
+<ol type="1">
+<li><p><strong>Install Ollama</strong></p>
+<p>Ollama is a tool that runs llms directly in the terminal or though other services - like Open-WebUI.</p>
+<pre class="{bash}"><code>sudo curl -fsSL https://ollama.com/install.sh | sh</code></pre></li>
+<li><p><strong>Pull a model</strong></p>
+<p>Once Ollama is installed you can get your model of choice from Ollama with a simple line. Check out <a href="https://ollama.com/search" class="uri">https://ollama.com/search</a> to find a model of interest. I recommend to start with a small one, e.g.&nbsp;3b, just to see that things work before testing what your hardware manages - things might get hot! But more on that later. I use Mistral:7b in the example. You’ll find the snippet to run on the page for the model of choice. Run the command <code>run</code> to start your model. Executing <code>run</code> will pull the model and run it the first time. Once it’s downloaded (“pulled”) the <code>run</code> command will just start the model. You can use <code>pull</code> if you only want to download it.</p>
+<pre class="{bash}"><code>ollama run mistral</code></pre>
+<p>Cool! You can now chat with your own llm in the terminal! When you are done just close that terminal.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Enter <code>ollama</code> to see what commands you can use. <code>list</code> lists available models, <code>ps</code> shows what processes the models runs on (e.g.&nbsp;100% GPU or 45% CPU / 55% GPU)</p>
+</div>
+</div></li>
+<li><p><strong>Install Open-WebUI</strong></p>
+<p>Open-WebUI gives you a user-interface similar to ChatGPT. You’ll recognize how things work, like drop-and-drag images and saved chats. There is one thing that made this step a bit more tricky - Docker. It means that you’ll run the application in a “safe environment” or inside a container. Run the line and let it cook for a while!</p>
+<pre class="{bash}"><code>sudo docker run -p 8080:8080 ghcr.io/open-webui/open-webui:main</code></pre>
+<p>Once it’s downloaded and ready (this may take some time) you should be able to see Open-WebUI in your browser at <a href="http://localhost:8080" class="uri">http://localhost:8080</a></p>
+<p>There you’ll be prompted to register an admin account the first time. And you are in!</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+To restart the Open-Web-UI session you should rename the container ID (CID).
+<ul>
+<li>Get the container ID from Docker.</li>
+</ul>
+<pre class="{bash}"><code>sudo docker ps</code></pre>
+<p>You should get something like this:</p>
+<div class="line-block">CONTAINER ID | IMAGE | COMMAND | CREATED | STATUS | PORTS | NAMES |<br>
+d22949556b11 | ghcr.io/open-webui/open-webui:main | “bash start.sh” | 45 minutes ago| Up 45 minutes (healthy) | 0.0.0.0:8080-8080/tcp, :::8080-8080/tcp | stupefied_lamarr</div>
+<ul>
+<li>In this example the CID is <em>d22949556b11</em>. Rename the CID to <em>Open-WebUI</em>:</li>
+</ul>
+<pre class="{bash}"><code>docker rename d22949556b11 Open-WebUI </code></pre>
+<ul>
+<li>To restart just enter <code>docker start Open-WebUI</code> and it’s active agian.</li>
+</ul>
+</div>
+</div></li>
+<li><p><strong>Connect Ollama with Open-WebUI</strong></p>
+<p>Now that you have Ollama with a model and Open-WebUI up and running all you need to do is connect the two. Ollama runs by default on <code>http://localhost:11434</code> or <code>http://127.0.0.1:11434</code> (Note, localhost and <code>127.0.0.1</code> is <a href="https://medium.com/@ThreadSafeDiaries/127-0-0-1-isnt-just-localhost-the-networking-truth-they-don-t-teach-you-ca9fbdb85241">not the same</a> but that is beyond the scope here.)</p>
+<ul>
+<li><p>Go to <em>Admin Settings</em> in Open-WebUI.</p></li>
+<li><p>Navigate to <em>Connections</em> &gt; <em>Ollama</em> &gt; <em>Manage</em> (click the wrench icon).</p></li>
+<li><p>Set Ollama API connection to <code>http://172.17.0.1:11434</code> (when Open-WebUI runs in docker). The default Ollama connection did not work for me but this did the trick.</p></li>
+</ul></li>
+<li><p><strong>Start chatting</strong></p>
+<p>🎉 Congratulations! You now have your own “ChatGPT”!! 🎉</p>
+<p>Your model running in Ollama should pop up and you can start chatting all you want on your own hardware! <code>pull</code> more models and choose them in the drop-down in Open-WebUI. There you can unload models as well (to save processing, they are still downloaded but not active in the CPU/GPU).</p></li>
+</ol>
+</section>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
+<p>I wrote the steps that worked for me, but I stumbled on my way to get there. Some hurdles were that Ollama and Open-WebUI did not communicate, my model ran fine on GPU or GPU/CPU mixed in the terminal but only CPU from Open-WebUI! And I did not know how to restart Open-WebUI and re-installed instead…</p>
+<p><strong>Here are some commands that came in handy:</strong></p>
+<p>Set parameters for GPU in <code>ollama</code> (GPU_LAYERS=-1 means all available layers; CUDA_VISIBLE_DEVICES=0 means only one card) and set the port for the host.</p>
+<pre class="{bash}"><code>export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
+export OLLAMA_GPU_LAYERS=-1
+export CUDA_VISIBLE_DEVICES=0</code></pre>
+<p>If it works, you’ll get no feedback. But to verify they’re all set:</p>
+<pre class="{bash}"><code>echo "OLLAMA_HOST: $OLLAMA_HOST"
+echo "OLLAMA_ORIGINS: $OLLAMA_ORIGINS"
+echo "OLLAMA_GPU_LAYERS: $OLLAMA_GPU_LAYERS"
+echo "CUDA_VISIBLE_DEVICES: $CUDA_VISIBLE_DEVICES"</code></pre>
+<p>You should see:</p>
+<pre class="{bash}"><code>OLLAMA_HOST: 0.0.0.0:11434 
+OLLAMA_ORIGINS: *
+OLLAMA_GPU_LAYERS: -1
+CUDA_VISIBLE_DEVICES: 0</code></pre>
+<p>Verify if Ollama is responding in localhost and what models are available: <code>curl http://localhost:11434/api/tags</code>. Check if <em>port :11434</em> is free: <code>sudo lsof -i :1143</code> Stop Ollama “across the board”: <code>sudo systemctl stop ollama</code>and start: <code>sudo systemctl start ollama</code></p>
+<p>Check activity for NVIDIA GPU: <code>watch nvidia-smi</code></p>
+<p>See active processes. PID means Process ID, and you can handle them from <em>htop</em>: <code>sudo apt install htop</code>. Run <code>htop</code>to see activities.</p>
+<p>See containers in Docker: <code>docker ps</code>. To see the configurations of a container <code>docker inspect &lt;insert CID or name&gt;</code>. Restarting the Docker service can resolve issues: <code>sudo systemctl restart docker</code>.</p>
+<p>Ensure that port 8080 is not being used by another service. You can check this with: <code>sudo lsof -i :808</code></p>
+<p>Linux Suspend Resume (from Ollama documentation)</p>
+<p><a href="https://github.com/ollama/ollama/blob/main/docs/faq.md" class="uri">https://github.com/ollama/ollama/blob/main/docs/faq.md</a></p>
+<p>On Linux, after a suspend/resume cycle, sometimes Ollama will fail to discover your NVIDIA GPU, and fallback to running on the CPU. You can workaround this driver bug by reloading the NVIDIA UVM driver with</p>
+<pre class="{bash}"><code>sudo rmmod nvidia_uvm &amp;&amp; sudo modprobe nvidia_uvm</code></pre>
+</section>
+<section id="that-should-be-it-happy-chatting" class="level2">
+<h2 class="anchored" data-anchor-id="that-should-be-it-happy-chatting">That should be it! Happy chatting!</h2>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
